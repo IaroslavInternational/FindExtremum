@@ -24,6 +24,7 @@
     <ProjectGuid>{6f168c9e-5443-48ec-a946-b078a6ed98a3}</ProjectGuid>
     <RootNamespace>asdone</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>FindExtremum</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
