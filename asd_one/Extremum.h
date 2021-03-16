@@ -8,6 +8,8 @@
 
 namespace Extremum
 {
+	// Структура данных для поиска экстремума
+	// методом равномерного поиска.
 	template<typename T>
 	struct UniformExtrSearchData
 	{
@@ -21,14 +23,16 @@ namespace Extremum
 			this->fcnPtr = fcnPtr;
 		}
 
-		int N;
-		T a;
-		T b;
-		std::string tag;
+		size_t N;						// Кол-во вычислений
+		T a;							// Начало отрезка
+		T b;							// Конец отрезка
+		std::string tag;				// Тэг: min / max
 
-		std::function<T(T)> fcnPtr;
+		std::function<T(T)> fcnPtr;		// Указатель на ф-ию
 	};
 
+	// Структура данных для поиска экстремума
+	// методом деления отрезка пополам.
 	template<typename T>
 	struct DivideExtrSearchData
 	{
@@ -42,21 +46,23 @@ namespace Extremum
 			this->fcnPtr = fcnPtr;
 		}
 
-		T l;
-		T a;
-		T b;
-		std::string tag;
+		T l;							// Точность
+		T a;							// Начало отрезка
+		T b;							// Конец отрезка
+		std::string tag;				// Тэг: min / max
 
-		std::function<T(T)> fcnPtr;
+		std::function<T(T)> fcnPtr;		// Указатель на ф-ию
 	};
 
+	// Поиск минимального значения в векторе.
+	// Возращает индекс и значение.
 	template<typename T>
-	std::pair<int, T> FindMin(std::vector<T>& vecFx)
+	std::pair<size_t, T> FindMin(std::vector<T>& vecFx)
 	{
 		T min = vecFx.at(0);
-		int index = 0;
+		size_t index = 0;
 
-		for (int i = 0; i < vecFx.size(); i++)
+		for (size_t i = 0; i < vecFx.size(); i++)
 		{
 			if (vecFx.at(i) < min)
 			{
@@ -65,16 +71,18 @@ namespace Extremum
 			}
 		}
 
-		return std::pair<int, T>(index, min);
+		return std::pair<size_t, T>(index, min);
 	}
 
+	// Поиск максимального значения в векторе.
+	// Возращает индекс и значение.
 	template<typename T>
-	std::pair<int, T> FindMax(std::vector<T>& vecFx)
+	std::pair<size_t, T> FindMax(std::vector<T>& vecFx)
 	{
 		T max = vecFx.at(0);
-		int index = 0;
+		size_t index = 0;
 
-		for (int i = 0; i < vecFx.size(); i++)
+		for (size_t i = 0; i < vecFx.size(); i++)
 		{
 			if (vecFx.at(i) > max)
 			{
@@ -83,9 +91,11 @@ namespace Extremum
 			}
 		}
 
-		return std::pair<int, T>(index, max);
+		return std::pair<size_t, T>(index, max);
 	}
 
+	// Функция для поиска экстремума
+	// методом равномерного поиска.
 	template<typename T>
 	void UnifSearch(UniformExtrSearchData<T>& uextr)
 	{
@@ -95,12 +105,12 @@ namespace Extremum
 		std::vector<T> fx;
 		fx.reserve(uextr.N);
 
-		std::pair<int, T> max, min;
+		std::pair<size_t, T> max, min;
 
 		T koef = (uextr.b - uextr.a) / (uextr.N + 1.0);
 		T result;
 
-		for (int i = 1; i <= uextr.N; i++)
+		for (size_t i = 1; i <= uextr.N; i++)
 		{
 			x.push_back(uextr.a + i * koef);
 			fx.push_back(uextr.fcnPtr(x.at(i - 1)));
@@ -169,7 +179,18 @@ namespace Extremum
 				"]" << std::endl;
 		}
 	}
+	
+	// Функция для поиска экстремума
+	// методом равномерного поиска.
+	template<typename T>
+	void UnifSearch(size_t N, T a, T b, std::string tag, std::function<T(T)> fcnPtr)
+	{
+		UniformExtrSearchData<T> data(N, a, b, tag, fcnPtr);
+		UnifSearch(data);
+	}
 
+	// Функция данных для поиска экстремума
+	// методом деления отрезка пополам.
 	template<typename T>
 	void DivSearch(DivideExtrSearchData<T>& dextr)
 	{
@@ -232,6 +253,17 @@ namespace Extremum
 		}
 	}
 
+	// Функция данных для поиска экстремума
+	// методом деления отрезка пополам.
+	template<typename T>
+	void DivSearch(T l, T a, T b, std::string tag, std::function<T(T)> fcnPtr)
+	{
+		DivideExtrSearchData<T> data(l, a, b, tag, fcnPtr);
+		DivSearch(data);
+	}
+
+	/******************************************************************/
+
 	typedef UniformExtrSearchData<double> UniformDoubleExtrSearchData;
 	typedef UniformExtrSearchData<float> UniformFloatExtrSearchData;
 	typedef UniformExtrSearchData<int> UniformIntExtrSearchData;
@@ -239,4 +271,6 @@ namespace Extremum
 	typedef DivideExtrSearchData<double> DivideDoubleExtrSearchData;
 	typedef DivideExtrSearchData<float> DivideFloatExtrSearchData;
 	typedef DivideExtrSearchData<int> DivideIntExtrSearchData;
+
+	/******************************************************************/
 }
